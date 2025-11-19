@@ -51,48 +51,70 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-600 to-primary-800 p-8 text-white shadow-xl sm:p-10">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -mb-10 -ml-10 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
+      <div className="relative overflow-hidden rounded-3xl bg-primary-900 text-white shadow-xl min-h-[400px] flex items-center">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1740&auto=format&fit=crop" 
+            alt="Farm field" 
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 via-primary-900/70 to-transparent" />
+        </div>
         
-        <div className="relative z-10 grid gap-8 lg:grid-cols-3 lg:gap-12">
-          <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-3xl font-bold sm:text-4xl">
-              Welcome back, {user?.firstName || 'Farmer'}! 🌾
+        <div className="relative z-10 grid gap-8 lg:grid-cols-3 lg:gap-12 p-8 sm:p-12 w-full">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="inline-flex items-center rounded-full bg-primary-800/50 px-3 py-1 text-sm font-medium text-primary-100 backdrop-blur-sm border border-primary-700/50">
+              <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2"></span>
+              Optimal Sowing Conditions
+            </div>
+            <h2 className="text-4xl font-bold sm:text-5xl leading-tight tracking-tight">
+              Good Morning, <br/>
+              <span className="text-primary-200">{user?.firstName || 'Farmer'}!</span> 🌾
             </h2>
-            <p className="text-primary-100 text-lg max-w-xl">
-              Here's what's happening on your farm today. The conditions are optimal for sowing wheat.
+            <p className="text-primary-100 text-lg sm:text-xl max-w-xl leading-relaxed">
+              The soil moisture levels are perfect for wheat sowing today. We've analyzed your field data and have new recommendations.
             </p>
-            <button 
-              onClick={() => navigate('/input')}
-              className="mt-4 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-sm hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-700 transition-all"
-            >
-              Start New Advisory
-            </button>
+            <div className="flex flex-wrap gap-4 pt-2">
+              <button 
+                onClick={() => navigate('/input')}
+                className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-bold text-primary-900 shadow-lg hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-900 transition-all transform hover:scale-105"
+              >
+                Start New Advisory
+              </button>
+              <button 
+                onClick={() => navigate('/todos')}
+                className="inline-flex items-center justify-center rounded-xl bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all"
+              >
+                View Tasks
+              </button>
+            </div>
           </div>
 
-          <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm border border-white/20">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-white">Weather Today</h3>
-              <Sun className="h-6 w-6 text-yellow-300" />
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-primary-100">Temperature</span>
-                <span className="font-bold text-xl">28°C</span>
+          <div className="hidden lg:flex flex-col justify-center">
+            <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-md border border-white/20 shadow-2xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-semibold text-white text-lg">Weather Today</h3>
+                <Sun className="h-8 w-8 text-yellow-300 animate-pulse" />
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-primary-100">Humidity</span>
-                <div className="flex items-center gap-2">
-                  <CloudRain className="h-4 w-4 text-blue-300" />
-                  <span className="font-bold">65%</span>
+              <div className="space-y-5">
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <span className="text-primary-100">Temperature</span>
+                  <span className="font-bold text-2xl">28°C</span>
                 </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-primary-100">Wind Speed</span>
-                <div className="flex items-center gap-2">
-                  <Wind className="h-4 w-4 text-gray-300" />
-                  <span className="font-bold">12 km/h</span>
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <span className="text-primary-100">Humidity</span>
+                  <div className="flex items-center gap-2">
+                    <CloudRain className="h-5 w-5 text-blue-300" />
+                    <span className="font-bold text-lg">65%</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-primary-100">Wind Speed</span>
+                  <div className="flex items-center gap-2">
+                    <Wind className="h-5 w-5 text-gray-300" />
+                    <span className="font-bold text-lg">12 km/h</span>
+                  </div>
                 </div>
               </div>
             </div>
