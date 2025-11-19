@@ -15,22 +15,18 @@ import { TasksToday } from './pages/TasksToday';
 
 
 
-import { SignedIn, SignedOut, SignIn, SignUp, RedirectToSignIn } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
+import { SignInPage } from './pages/SignInPage';
+import { SignUpPage } from './pages/SignUpPage';
+
+// ... imports
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={
-          <div className="flex items-center justify-center min-h-screen bg-gray-50">
-            <SignIn routing="path" path="/login" signUpUrl="/signup" />
-          </div>
-        } />
-        <Route path="/signup" element={
-          <div className="flex items-center justify-center min-h-screen bg-gray-50">
-            <SignUp routing="path" path="/signup" signInUrl="/login" />
-          </div>
-        } />
+        <Route path="/login" element={<SignInPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         
         <Route path="/" element={
           <>
