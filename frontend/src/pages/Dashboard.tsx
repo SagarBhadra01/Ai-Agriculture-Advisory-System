@@ -1,14 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  MapPin, 
-  Sprout, 
-  ClipboardList, 
   MessageSquare, 
-  BookOpen, 
   ScanLine, 
-  TrendingUp, 
-  CalendarCheck,
+  ClipboardList, 
+  History,
+  ArrowRight,
   Sun,
   CloudRain,
   Wind
@@ -22,18 +19,11 @@ export const Dashboard: React.FC = () => {
 
   const features = [
     {
-      title: 'Start Advisory',
-      description: 'Get personalized crop recommendations based on your farm data.',
-      icon: MapPin,
-      path: '/input',
+      title: 'All Advisory',
+      description: 'View your past and current crop advisories.',
+      icon: History,
+      path: '/advisory-history',
       color: 'bg-blue-50 text-blue-600',
-    },
-    {
-      title: 'Crop Recommendations',
-      description: 'View AI-suggested crops suitable for your soil and weather.',
-      icon: Sprout,
-      path: '/recommendations',
-      color: 'bg-green-50 text-green-600',
     },
     {
       title: 'My Tasks',
@@ -43,32 +33,11 @@ export const Dashboard: React.FC = () => {
       color: 'bg-purple-50 text-purple-600',
     },
     {
-      title: 'Daily Tasks',
-      description: 'Check your daily farming schedule and weather alerts.',
-      icon: CalendarCheck,
-      path: '/daily-tasks',
-      color: 'bg-orange-50 text-orange-600',
-    },
-    {
       title: 'Disease Detect',
       description: 'Upload plant photos to detect diseases and get remedies.',
       icon: ScanLine,
       path: '/disease',
       color: 'bg-red-50 text-red-600',
-    },
-    {
-      title: 'Market Prices',
-      description: 'Stay updated with the latest mandi prices for your crops.',
-      icon: TrendingUp,
-      path: '/market',
-      color: 'bg-yellow-50 text-yellow-600',
-    },
-    {
-      title: 'Schemes',
-      description: 'Explore government schemes and subsidies for farmers.',
-      icon: BookOpen,
-      path: '/schemes',
-      color: 'bg-indigo-50 text-indigo-600',
     },
     {
       title: 'Chatbot',
@@ -152,6 +121,9 @@ export const Dashboard: React.FC = () => {
                   <p className="mt-1 text-sm text-gray-500 line-clamp-2">
                     {feature.description}
                   </p>
+                </div>
+                <div className="flex items-center text-sm font-medium text-primary-600 group-hover:translate-x-1 transition-transform">
+                  Open <ArrowRight className="ml-1 h-4 w-4" />
                 </div>
               </div>
             </Card>

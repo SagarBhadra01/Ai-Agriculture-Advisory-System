@@ -9,7 +9,6 @@ import {
   BookOpen, 
   ScanLine, 
   TrendingUp, 
-  CalendarCheck,
   X
 } from 'lucide-react';
 import { cn } from '../../utils/helpers';
@@ -22,13 +21,12 @@ interface SidebarProps {
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Start Advisory', href: '/input', icon: MapPin },
-  { name: 'Crop Recommendations', href: '/recommendations', icon: Sprout },
+  { name: 'Advisory History', href: '/advisory-history', icon: Sprout },
   { name: 'My Tasks', href: '/todos', icon: ClipboardList },
-  { name: 'Chatbot', href: '/chatbot', icon: MessageSquare },
-  { name: 'Schemes', href: '/schemes', icon: BookOpen },
   { name: 'Disease Detect', href: '/disease', icon: ScanLine },
   { name: 'Market Prices', href: '/market', icon: TrendingUp },
-  { name: 'Daily Tasks', href: '/daily-tasks', icon: CalendarCheck },
+  { name: 'Schemes', href: '/schemes', icon: BookOpen },
+  { name: 'Chatbot', href: '/chatbot', icon: MessageSquare },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {

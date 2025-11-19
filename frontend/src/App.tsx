@@ -12,6 +12,7 @@ import { Schemes } from './pages/Schemes';
 import { DiseaseDetect } from './pages/DiseaseDetect';
 import { MarketPrices } from './pages/MarketPrices';
 import { TasksToday } from './pages/TasksToday';
+import { AdvisoryHistory } from './pages/AdvisoryHistory';
 
 
 
@@ -41,6 +42,7 @@ function App() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="input" element={<FarmerInput />} />
+          <Route path="advisory-history" element={<AdvisoryHistory />} />
           <Route path="predict" element={<SystemPredicts />} />
           <Route path="recommendations" element={<CropRecommendation />} />
           <Route path="todos" element={<ToDoList />} />
