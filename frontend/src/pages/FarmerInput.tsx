@@ -50,17 +50,17 @@ export const FarmerInput: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 animate-fade-in">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Start New Advisory</h2>
-        <p className="text-gray-600">Enter your farm details to get personalized recommendations.</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Start New Advisory</h2>
+        <p className="text-sm sm:text-base text-gray-600 mt-1">Enter your farm details to get personalized recommendations.</p>
       </div>
 
-      <Card className="p-6 sm:p-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
+      <Card padding="lg">
+        <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-4">
             <label className="block text-sm font-medium text-gray-700">Location Details</label>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Input
                 placeholder="Enter Pincode"
                 value={formData.pincode}
@@ -73,15 +73,16 @@ export const FarmerInput: React.FC = () => {
                 variant="secondary"
                 onClick={handleLocateMe}
                 disabled={isLoading}
+                className="w-full sm:w-auto"
               >
                 <Navigation className="h-4 w-4 mr-2" />
                 Locate Me
               </Button>
             </div>
             {formData.location && (
-              <p className="text-sm text-green-600 flex items-center">
-                <MapPin className="h-4 w-4 mr-1" />
-                Location detected: {formData.location}
+              <p className="text-xs sm:text-sm text-green-600 flex items-center">
+                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 shrink-0" />
+                <span className="truncate">Location detected: {formData.location}</span>
               </p>
             )}
           </div>
@@ -98,32 +99,32 @@ export const FarmerInput: React.FC = () => {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-3">
               Irrigation Type
             </label>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               {['Borewell', 'Canal', 'Rainfed', 'Drip'].map((type) => (
                 <div
                   key={type}
                   onClick={() => setFormData({ ...formData, irrigation: type })}
                   className={`
-                    cursor-pointer rounded-xl border p-4 text-center transition-all
+                    cursor-pointer rounded-xl border p-3 sm:p-4 text-center transition-all touch-target
                     ${formData.irrigation === type
-                      ? 'border-primary-500 bg-primary-50 text-primary-700 ring-1 ring-primary-500'
+                      ? 'border-primary-500 bg-primary-50 text-primary-700 ring-2 ring-primary-500 shadow-sm'
                       : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                     }
                   `}
                 >
-                  <Droplets className={`mx-auto h-6 w-6 mb-2 ${
+                  <Droplets className={`mx-auto h-5 w-5 sm:h-6 sm:w-6 mb-1.5 sm:mb-2 ${
                     formData.irrigation === type ? 'text-primary-600' : 'text-gray-400'
                   }`} />
-                  <span className="text-sm font-medium">{type}</span>
+                  <span className="text-xs sm:text-sm font-medium">{type}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-2 sm:pt-4">
             <Button
               type="submit"
               className="w-full"

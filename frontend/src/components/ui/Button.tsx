@@ -16,23 +16,24 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const variants = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 shadow-sm',
-    secondary: 'bg-secondary-100 text-secondary-900 hover:bg-secondary-200',
-    outline: 'border-2 border-primary-600 text-primary-600 hover:bg-primary-50',
-    ghost: 'text-secondary-600 hover:bg-secondary-50 hover:text-secondary-900',
-    danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
+    primary: 'bg-primary-600 text-white hover:bg-primary-700 shadow-sm active:bg-primary-800',
+    secondary: 'bg-secondary-100 text-secondary-900 hover:bg-secondary-200 active:bg-secondary-300',
+    outline: 'border-2 border-primary-600 text-primary-600 hover:bg-primary-50 active:bg-primary-100',
+    ghost: 'text-secondary-600 hover:bg-secondary-50 hover:text-secondary-900 active:bg-secondary-100',
+    danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm active:bg-red-800',
   };
 
   const sizes = {
-    sm: 'h-8 px-3 text-sm',
-    md: 'h-10 px-4 text-base',
+    sm: 'h-10 px-3 text-sm',
+    md: 'h-11 px-4 text-base',
     lg: 'h-12 px-6 text-lg',
   };
 
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center rounded-xl font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
+        'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]',
+        'min-h-[44px]', // Ensure touch-friendly minimum
         variants[variant],
         sizes[size],
         className

@@ -49,42 +49,43 @@ export const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl bg-primary-900 text-white shadow-xl min-h-[400px] flex items-center animate-slide-up">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-primary-900 text-white shadow-xl min-h-[350px] sm:min-h-[400px] lg:min-h-[400px] flex items-center animate-slide-up">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1740&auto=format&fit=crop" 
             alt="Farm field" 
             className="h-full w-full object-cover"
+            loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/90 via-primary-900/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/95 via-primary-900/80 sm:via-primary-900/70 to-primary-900/60 sm:to-transparent" />
         </div>
         
-        <div className="relative z-10 grid gap-8 lg:grid-cols-3 lg:gap-12 p-8 sm:p-12 w-full">
-          <div className="lg:col-span-2 space-y-6 animate-slide-up delay-100">
-            <div className="inline-flex items-center rounded-full bg-primary-800/50 px-3 py-1 text-sm font-medium text-primary-100 backdrop-blur-sm border border-primary-700/50">
-              <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse"></span>
+        <div className="relative z-10 grid gap-6 sm:gap-8 lg:grid-cols-3 lg:gap-12 p-6 sm:p-8 lg:p-12 w-full">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6 animate-slide-up delay-100">
+            <div className="inline-flex items-center rounded-full bg-primary-800/50 px-2.5 sm:px-3 py-1 text-xs sm:text-sm font-medium text-primary-100 backdrop-blur-sm border border-primary-700/50">
+              <span className="flex h-2 w-2 rounded-full bg-green-400 mr-1.5 sm:mr-2 animate-pulse"></span>
               Optimal Sowing Conditions
             </div>
-            <h2 className="text-4xl font-bold sm:text-5xl leading-tight tracking-tight">
-              Good Morning, <br/>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight">
+              Good Morning, <br className="hidden sm:block" />
               <span className="text-primary-200">{user?.firstName || 'Farmer'}!</span> 🌾
             </h2>
-            <p className="text-primary-100 text-lg sm:text-xl max-w-xl leading-relaxed">
+            <p className="text-primary-100 text-base sm:text-lg lg:text-xl max-w-xl leading-relaxed">
               The soil moisture levels are perfect for wheat sowing today. We've analyzed your field data and have new recommendations.
             </p>
-            <div className="flex flex-wrap gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-2">
               <button 
                 onClick={() => navigate('/input')}
-                className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-bold text-primary-900 shadow-lg hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-900 transition-all transform hover:scale-105 active:scale-95"
+                className="inline-flex items-center justify-center rounded-xl bg-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold text-primary-900 shadow-lg hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-900 transition-all transform hover:scale-105 active:scale-95 touch-target"
               >
                 Start New Advisory
               </button>
               <button 
                 onClick={() => navigate('/todos')}
-                className="inline-flex items-center justify-center rounded-xl bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all hover:scale-105 active:scale-95"
+                className="inline-flex items-center justify-center rounded-xl bg-white/10 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold text-white backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all hover:scale-105 active:scale-95 touch-target"
               >
                 View Tasks
               </button>
@@ -124,29 +125,30 @@ export const Dashboard: React.FC = () => {
 
       {/* Features Grid */}
       <div className="animate-slide-up delay-300">
-        <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Quick Actions</h3>
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 xs:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => (
             <Card 
               key={feature.title}
-              className={`group cursor-pointer hover:border-primary-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-scale-in`}
+              className={`group cursor-pointer hover:border-primary-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-scale-in p-0`}
               style={{ animationDelay: `${(index + 3) * 100}ms` }}
               onClick={() => navigate(feature.path)}
+              padding="none"
             >
-              <div className="p-6 space-y-4">
-                <div className={`inline-flex rounded-xl p-3 ring-4 ring-white ${feature.color} bg-opacity-20 group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className="h-6 w-6" />
+              <div className="p-5 sm:p-6 space-y-3 sm:space-y-4">
+                <div className={`inline-flex rounded-xl p-2.5 sm:p-3 ring-4 ring-white ${feature.color} bg-opacity-20 group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+                  <h3 className="font-semibold text-base sm:text-lg text-gray-900 group-hover:text-primary-600 transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+                  <p className="mt-1 text-xs sm:text-sm text-gray-500 line-clamp-2">
                     {feature.description}
                   </p>
                 </div>
-                <div className="flex items-center text-sm font-medium text-primary-600 group-hover:translate-x-1 transition-transform">
-                  Open <ArrowRight className="ml-1 h-4 w-4" />
+                <div className="flex items-center text-xs sm:text-sm font-medium text-primary-600 group-hover:translate-x-1 transition-transform">
+                  Open <ArrowRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
               </div>
             </Card>
