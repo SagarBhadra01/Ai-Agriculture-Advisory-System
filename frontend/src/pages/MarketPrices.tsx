@@ -25,22 +25,22 @@ export const MarketPrices: React.FC = () => {
   const sortedData = React.useMemo(() => {
     if (!sortConfig) return filteredData;
     return [...filteredData].sort((a, b) => {
-      // @ts-ignore
+      // @ts-expect-error - Dynamic key access on typed object
       if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-      // @ts-ignore
+      // @ts-expect-error - Dynamic key access on typed object
       if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
   }, [filteredData, sortConfig]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div>
         <h2 className="text-2xl font-bold text-gray-900">Market Prices</h2>
         <p className="text-gray-600">Real-time mandi prices for crops near you.</p>
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden animate-slide-up">
         <div className="p-4 border-b border-gray-200 bg-gray-50">
           <Input
             placeholder="Search crops or markets..."
@@ -75,7 +75,7 @@ export const MarketPrices: React.FC = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {sortedData.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50">
+                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {item.crop}
                   </td>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '../../utils/helpers';
+import { cn } from '../../utils/helpers.ts';
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: 'success' | 'warning' | 'error' | 'info' | 'neutral';

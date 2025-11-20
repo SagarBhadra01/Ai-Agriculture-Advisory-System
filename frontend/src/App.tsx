@@ -11,7 +11,6 @@ import { Chatbot } from './pages/Chatbot';
 import { Schemes } from './pages/Schemes';
 import { DiseaseDetect } from './pages/DiseaseDetect';
 import { MarketPrices } from './pages/MarketPrices';
-import { TasksToday } from './pages/TasksToday';
 import { AdvisoryHistory } from './pages/AdvisoryHistory';
 
 
@@ -50,7 +49,6 @@ function App() {
           <Route path="schemes" element={<Schemes />} />
           <Route path="disease" element={<DiseaseDetect />} />
           <Route path="market" element={<MarketPrices />} />
-          <Route path="daily-tasks" element={<TasksToday />} />
         </Route>
       </Routes>
     </Router>

@@ -1,11 +1,13 @@
 import { Menu, Bell, Sprout } from 'lucide-react';
-import { UserButton } from '@clerk/clerk-react';
+import { UserButton, useUser } from '@clerk/clerk-react';
 
 interface HeaderProps {
   onMenuClick: () => void;
 }
 
 export const Header = ({ onMenuClick }: HeaderProps) => {
+  const { user } = useUser();
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-x-4 border-b border-gray-200/50 bg-white/80 backdrop-blur-md px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 transition-all duration-300">
       <button 
@@ -39,7 +41,7 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
                 <UserButton afterSignOutUrl="/login" />
                 <span className="hidden lg:flex lg:items-center">
                   <span className="text-sm font-semibold leading-6 text-gray-700" aria-hidden="true">
-                    Farmer
+                    {user?.firstName || 'Farmer'}
                   </span>
                 </span>
               </div>

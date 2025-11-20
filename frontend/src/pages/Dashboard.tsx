@@ -49,9 +49,9 @@ export const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-3xl bg-primary-900 text-white shadow-xl min-h-[400px] flex items-center">
+      <div className="relative overflow-hidden rounded-3xl bg-primary-900 text-white shadow-xl min-h-[400px] flex items-center animate-slide-up">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
@@ -63,9 +63,9 @@ export const Dashboard: React.FC = () => {
         </div>
         
         <div className="relative z-10 grid gap-8 lg:grid-cols-3 lg:gap-12 p-8 sm:p-12 w-full">
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 animate-slide-up delay-100">
             <div className="inline-flex items-center rounded-full bg-primary-800/50 px-3 py-1 text-sm font-medium text-primary-100 backdrop-blur-sm border border-primary-700/50">
-              <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2"></span>
+              <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse"></span>
               Optimal Sowing Conditions
             </div>
             <h2 className="text-4xl font-bold sm:text-5xl leading-tight tracking-tight">
@@ -78,24 +78,24 @@ export const Dashboard: React.FC = () => {
             <div className="flex flex-wrap gap-4 pt-2">
               <button 
                 onClick={() => navigate('/input')}
-                className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-bold text-primary-900 shadow-lg hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-900 transition-all transform hover:scale-105"
+                className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-bold text-primary-900 shadow-lg hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-900 transition-all transform hover:scale-105 active:scale-95"
               >
                 Start New Advisory
               </button>
               <button 
                 onClick={() => navigate('/todos')}
-                className="inline-flex items-center justify-center rounded-xl bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all"
+                className="inline-flex items-center justify-center rounded-xl bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all hover:scale-105 active:scale-95"
               >
                 View Tasks
               </button>
             </div>
           </div>
 
-          <div className="hidden lg:flex flex-col justify-center">
-            <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-md border border-white/20 shadow-2xl">
+          <div className="hidden lg:flex flex-col justify-center animate-slide-up delay-200">
+            <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-md border border-white/20 shadow-2xl hover:bg-white/15 transition-colors">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-semibold text-white text-lg">Weather Today</h3>
-                <Sun className="h-8 w-8 text-yellow-300 animate-pulse" />
+                <Sun className="h-8 w-8 text-yellow-300 animate-[spin_10s_linear_infinite]" />
               </div>
               <div className="space-y-5">
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -123,17 +123,18 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Features Grid */}
-      <div>
+      <div className="animate-slide-up delay-300">
         <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature) => (
+          {features.map((feature, index) => (
             <Card 
               key={feature.title}
-              className="group cursor-pointer hover:border-primary-200 transition-all duration-300"
+              className={`group cursor-pointer hover:border-primary-200 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-scale-in`}
+              style={{ animationDelay: `${(index + 3) * 100}ms` }}
               onClick={() => navigate(feature.path)}
             >
               <div className="p-6 space-y-4">
-                <div className={`inline-flex rounded-xl p-3 ring-4 ring-white ${feature.color} bg-opacity-20`}>
+                <div className={`inline-flex rounded-xl p-3 ring-4 ring-white ${feature.color} bg-opacity-20 group-hover:scale-110 transition-transform duration-300`}>
                   <feature.icon className="h-6 w-6" />
                 </div>
                 <div>
