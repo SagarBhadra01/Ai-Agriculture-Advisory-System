@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Droplets, Ruler, ArrowRight, Navigation } from 'lucide-react';
+import { MapPin, Droplets, Ruler, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
@@ -9,35 +9,19 @@ export const FarmerInput: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    location: '',
-    pincode: '',
+    district: '',
     area: '',
     irrigation: 'Rainfed',
   });
 
-  const handleLocateMe = () => {
-    if ('geolocation' in navigator) {
-      setIsLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // Simulate reverse geocoding
-          setTimeout(() => {
-            setFormData(prev => ({
-              ...prev,
-              location: `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`,
-              pincode: '560001'
-            }));
-            setIsLoading(false);
-          }, 1000);
-        },
-        (error) => {
-          console.error(error);
-          setIsLoading(false);
-          alert('Unable to retrieve your location');
-        }
-      );
-    }
-  };
+  const districts = [
+    'Alipurduar', 'Bankura', 'Birbhum', 'Cooch Behar', 'Dakshin Dinajpur', 
+    'Darjeeling', 'Hooghly', 'Howrah', 'Jalpaiguri', 'Jhargram', 
+    'Kalimpong', 'Kolkata', 'Malda', 'Murshidabad', 'Nadia', 
+    'North 24 Parganas', 'Paschim Bardhaman', 'Paschim Medinipur', 
+    'Purba Bardhaman', 'Purba Medinipur', 'Purulia', 
+    'South 24 Parganas', 'Uttar Dinajpur'
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +29,7 @@ export const FarmerInput: React.FC = () => {
     // Simulate processing
     setTimeout(() => {
       setIsLoading(false);
-      navigate('/predict');
+      navigate('/predict', { state: formData });
     }, 1500);
   };
 
@@ -53,38 +37,34 @@ export const FarmerInput: React.FC = () => {
     <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 animate-fade-in">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Start New Advisory</h2>
-        <p className="text-sm sm:text-base text-gray-600 mt-1">Enter your farm details to get personalized recommendations.</p>
+        <p className="text-sm sm:text-base text-gray-600 mt-1">Select your district and farm details to get personalized recommendations.</p>
       </div>
 
       <Card padding="lg">
         <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+          
+          {/* District Selection */}
           <div className="space-y-3 sm:space-y-4">
-            <label className="block text-sm font-medium text-gray-700">Location Details</label>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <Input
-                placeholder="Enter Pincode"
-                value={formData.pincode}
-                onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                className="flex-1"
+            <label className="block text-sm font-medium text-gray-700">Select District</label>
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+              <select
+                value={formData.district}
+                onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none bg-white appearance-none"
                 required
-              />
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={handleLocateMe}
-                disabled={isLoading}
-                className="w-full sm:w-auto"
               >
-                <Navigation className="h-4 w-4 mr-2" />
-                Locate Me
-              </Button>
+                <option value="">-- Choose District --</option>
+                {districts.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
             </div>
-            {formData.location && (
-              <p className="text-xs sm:text-sm text-green-600 flex items-center">
-                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 shrink-0" />
-                <span className="truncate">Location detected: {formData.location}</span>
-              </p>
-            )}
           </div>
 
           <Input

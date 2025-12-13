@@ -1,39 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import { Plus, Calendar, ChevronRight, MapPin } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
+import api from '../services/api';
 
 export const AdvisoryHistory: React.FC = () => {
   const navigate = useNavigate();
+  const { user, isLoaded } = useUser();
+  const [history, setHistory] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for history
-  const history = [
-    {
-      id: 1,
-      date: '2024-03-15',
-      crop: 'Wheat',
-      location: 'Field A (North)',
-      status: 'active',
-      stage: 'Vegetative',
-    },
-    {
-      id: 2,
-      date: '2023-11-20',
-      crop: 'Mustard',
-      location: 'Field B (South)',
-      status: 'completed',
-      stage: 'Harvested',
-    },
-    {
-      id: 3,
-      date: '2023-06-10',
-      crop: 'Rice',
-      location: 'Field A (North)',
-      status: 'completed',
-      stage: 'Harvested',
-    },
-  ];
+  useEffect(() => {
+    const fetchAdvisories = async () => {
+      if (!isLoaded) return; // Wait for Clerk to load
+
+      try {
+        const userEmail = user?.primaryEmailAddress?.emailAddress || 'demo@agriculture.com'; // Fallback for dev/demo if auth skipped
+        
+        const response = await api.get('/advisories', { 
+          params: { userEmail } 
+        });
+        
+        // Map backend data to frontend structure
+        const mappedData = response.data.map((item: any) => ({
+          id: item.id,
+          date: item.date,
+          crop: item.crop?.name || 'Unknown Crop',
+          location: item.location,
+          status: item.status,
+          stage: item.stage,
+        }));
+        setHistory(mappedData);
+      } catch (error) {
+        console.error('Failed to fetch advisories:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdvisories();
+  }, [isLoaded, user]);
+
+  if (loading) {
+    return <div className="text-center py-10">Loading history...</div>;
+  }
 
   return (
     <div className="space-y-6">

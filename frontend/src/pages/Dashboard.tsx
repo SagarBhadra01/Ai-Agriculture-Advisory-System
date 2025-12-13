@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   MessageSquare, 
@@ -12,10 +12,28 @@ import {
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { useUser } from '@clerk/clerk-react';
+import api from '../services/api';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useUser();
+  const [weather, setWeather] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const weatherRes = await api.get('/weather');
+        setWeather(weatherRes.data);
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const features = [
     {
@@ -74,7 +92,7 @@ export const Dashboard: React.FC = () => {
               <span className="text-primary-200">{user?.firstName || 'Farmer'}!</span> 🌾
             </h2>
             <p className="text-primary-100 text-base sm:text-lg lg:text-xl max-w-xl leading-relaxed">
-              The soil moisture levels are perfect for wheat sowing today. We've analyzed your field data and have new recommendations.
+              {weather?.forecast || "The soil moisture levels are perfect for wheat sowing today. We've analyzed your field data and have new recommendations."}
             </p>
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-2">
               <button 
@@ -101,20 +119,20 @@ export const Dashboard: React.FC = () => {
               <div className="space-y-5">
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <span className="text-primary-100">Temperature</span>
-                  <span className="font-bold text-2xl">28°C</span>
+                  <span className="font-bold text-2xl">{weather?.temperature || '--'}°C</span>
                 </div>
                 <div className="flex items-center justify-between border-b border-white/10 pb-4">
                   <span className="text-primary-100">Humidity</span>
                   <div className="flex items-center gap-2">
                     <CloudRain className="h-5 w-5 text-blue-300" />
-                    <span className="font-bold text-lg">65%</span>
+                    <span className="font-bold text-lg">{weather?.humidity || '--'}%</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-primary-100">Wind Speed</span>
                   <div className="flex items-center gap-2">
                     <Wind className="h-5 w-5 text-gray-300" />
-                    <span className="font-bold text-lg">12 km/h</span>
+                    <span className="font-bold text-lg">{weather?.windSpeed || '--'} km/h</span>
                   </div>
                 </div>
               </div>

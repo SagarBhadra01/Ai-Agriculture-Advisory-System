@@ -6,11 +6,17 @@ export interface FarmerProfile {
 }
 
 export interface Crop {
-  id: string;
+  id: number;
   name: string;
-  suitabilityScore: number;
-  reason: string;
-  imageUrl: string;
+  scientificName?: string;
+  cropType?: string;
+  duration?: string;
+  durationDays?: number;
+  waterRequirement?: string;
+  description?: string;
+  imageUrl?: string;
+  suitabilityScore?: number; // Keep for frontend logic if needed
+  reason?: string; // Keep for frontend logic if needed
 }
 
 export interface ToDoItem {
@@ -22,19 +28,29 @@ export interface ToDoItem {
 }
 
 export interface Scheme {
-  id: string;
+  id: number;
   name: string;
-  eligibility: string;
-  deadline: string;
   description: string;
+  eligibilityCriteria?: string;
+  applicationLink?: string;
+  deadline?: string;
+  // Mapped fields for backward compatibility if needed, or remove and update components
+  eligibility?: string; 
 }
 
 export interface MarketPrice {
-  id: string;
-  crop: string;
-  market: string;
+  id: number;
+  cropId?: number;
+  marketName: string;
   price: number;
-  trend: 'up' | 'down' | 'stable';
+  currency?: string;
+  date?: string;
+  state?: string;
+  district?: string;
+  crop?: Crop;
+  // Mapped fields
+  market?: string;
+  trend?: 'up' | 'down' | 'stable';
 }
 
 export interface DiseaseResult {

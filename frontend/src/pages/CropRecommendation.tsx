@@ -1,20 +1,82 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import { CheckCircle, ArrowRight, Star } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
-import { MOCK_CROPS } from '../utils/mockData';
+import api from '../services/api';
+import type { Crop } from '../types';
 
 export const CropRecommendation: React.FC = () => {
   const navigate = useNavigate();
-  const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
+  // Retrieve passed state (district)
+  const location = useLocation();
+  const district = location.state?.district;
 
-  const handleProceed = () => {
+  const [crops, setCrops] = useState<Crop[]>([]);
+  const [selectedCrop, setSelectedCrop] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCrops = async () => {
+      try {
+        // Pass district as query param if available
+        const response = await api.get('/crops', { 
+          params: { district: district } 
+        });
+
+        // Backend now returns enriched data if district matched
+        const mappedData = response.data.map((crop: any) => ({
+          ...crop,
+          suitabilityScore: crop.suitabilityScore || 85, 
+          reason: crop.reason || 'General recommendation based on season.',
+          imageUrl: crop.imageUrl || 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&q=80&w=800',
+        }));
+        setCrops(mappedData);
+      } catch (error) {
+        console.error('Failed to fetch crops:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCrops();
+  }, [district]);
+
+  const { user } = useUser();
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleProceed = async () => {
     if (selectedCrop) {
-      navigate('/todos');
+      setIsSaving(true);
+      try {
+        const userEmail = user?.primaryEmailAddress?.emailAddress;
+        
+        if (userEmail) {
+           await api.post('/advisories', {
+             cropId: selectedCrop,
+             location: district || 'Unknown',
+             stage: 'Preparation',
+             status: 'active',
+             message: 'New advisory generated based on your district selection.',
+             userEmail
+           });
+        }
+        navigate('/todos');
+      } catch (error) {
+        console.error('Failed to create advisory:', error);
+        // Navigate anyway for UX
+        navigate('/todos');
+      } finally {
+        setIsSaving(false);
+      }
     }
   };
+
+  if (loading) {
+    return <div className="text-center py-10">Loading recommendations...</div>;
+  }
 
   return (
     <div className="space-y-4 sm:space-y-6 pb-20 sm:pb-0 animate-fade-in">
@@ -24,7 +86,7 @@ export const CropRecommendation: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:gap-6">
-        {MOCK_CROPS.map((crop) => (
+        {crops.map((crop) => (
           <Card
             key={crop.id}
             className={`
@@ -46,11 +108,24 @@ export const CropRecommendation: React.FC = () => {
               <div className="p-4 sm:p-6 flex flex-col flex-1">
                 <div className="flex justify-between items-start mb-2 gap-2">
                   <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex-1">{crop.name}</h3>
-                  <Badge variant={crop.suitabilityScore > 90 ? 'success' : 'warning'} size="md">
-                    {crop.suitabilityScore}% Match
+                  <Badge variant={(crop.suitabilityScore || 0) > 90 ? 'success' : 'warning'} size="md">
+                    {crop.suitabilityScore || 0}% Match
                   </Badge>
                 </div>
                 
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {crop.cropType && (
+                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700">
+                      {crop.cropType}
+                    </span>
+                  )}
+                  {crop.durationDays && (
+                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700">
+                      {crop.durationDays} Days
+                    </span>
+                  )}
+                </div>
+
                 <p className="text-gray-600 text-sm sm:text-base mb-4 flex-1">
                   {crop.reason}
                 </p>

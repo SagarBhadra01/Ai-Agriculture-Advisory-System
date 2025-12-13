@@ -1,13 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowUp, ArrowDown, Minus, Search, ArrowUpDown } from 'lucide-react';
 import { Input } from '../components/ui/Input';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
-import { MOCK_MARKET_PRICES } from '../utils/mockData';
+import api from '../services/api';
+import type { MarketPrice } from '../types';
 
 export const MarketPrices: React.FC = () => {
+  const [marketPrices, setMarketPrices] = useState<MarketPrice[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const response = await api.get('/market-prices');
+        // Backend returns: { id, marketName, price, crop: { name, ... } }
+        const mappedData = response.data.map((item: any) => ({
+          ...item,
+          market: item.marketName || item.market,
+          // crop is preserved as object
+          trend: item.trend || 'stable',
+        }));
+        setMarketPrices(mappedData);
+      } catch (error) {
+        console.error('Failed to fetch market prices:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrices();
+  }, []);
 
   const handleSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';
@@ -17,21 +42,32 @@ export const MarketPrices: React.FC = () => {
     setSortConfig({ key, direction });
   };
 
-  const filteredData = MOCK_MARKET_PRICES.filter(item =>
-    item.crop.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.market.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredData = marketPrices.filter(item => {
+    const cropName = item.crop?.name || '';
+    const marketName = item.marketName || item.market || '';
+    return (
+      cropName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      marketName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const sortedData = React.useMemo(() => {
     if (!sortConfig) return filteredData;
     return [...filteredData].sort((a, b) => {
-      // @ts-expect-error - Dynamic key access on typed object
-      if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-      // @ts-expect-error - Dynamic key access on typed object
-      if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+      // @ts-expect-error - Dynamic key access
+      const aValue = a[sortConfig.key] || a.crop?.name || '';
+      // @ts-expect-error - Dynamic key access
+      const bValue = b[sortConfig.key] || b.crop?.name || '';
+      
+      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
   }, [filteredData, sortConfig]);
+
+  if (loading) {
+    return <div className="text-center py-10">Loading market prices...</div>;
+  }
 
   return (
     <div className="space-y-4 sm:space-y-6 animate-fade-in">
@@ -77,10 +113,10 @@ export const MarketPrices: React.FC = () => {
               {sortedData.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {item.crop}
+                    {item.crop?.name || 'Unknown'}
                   </td>
                   <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
-                    {item.market}
+                    {item.marketName || item.market}
                   </td>
                   <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                     ₹{item.price.toLocaleString()}

@@ -1,17 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, CheckCircle, Circle, Calendar } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
-import { MOCK_TODOS } from '../utils/mockData';
+import api from '../services/api';
+import type { ToDoItem } from '../types';
 
 export const ToDoList: React.FC = () => {
-  const [todos, setTodos] = useState(MOCK_TODOS);
+  const [todos, setTodos] = useState<ToDoItem[]>([]);
   const [openSection, setOpenSection] = useState<string | null>('Preparation');
+  const [loading, setLoading] = useState(true);
 
-  const toggleTodo = (id: string) => {
-    setTodos(todos.map(t => 
-      t.id === id ? { ...t, completed: !t.completed } : t
-    ));
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const response = await api.get('/todos');
+        // Map backend data to frontend structure if needed
+        // Backend: { id, category, task, dueDate, completed }
+        // Frontend: { id, category, task, dueDate, completed }
+        // Format date for display
+        const mappedData = response.data.map((item: any) => ({
+          ...item,
+          dueDate: new Date(item.dueDate).toLocaleDateString(),
+        }));
+        setTodos(mappedData);
+      } catch (error) {
+        console.error('Failed to fetch todos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTodos();
+  }, []);
+
+  const toggleTodo = async (id: string | number) => {
+    try {
+      // Optimistic update
+      setTodos(todos.map(t => 
+        t.id === id ? { ...t, completed: !t.completed } : t
+      ));
+      
+      await api.patch(`/todos/${id}`);
+    } catch (error) {
+      console.error('Failed to toggle todo:', error);
+      // Revert on error
+      setTodos(todos.map(t => 
+        t.id === id ? { ...t, completed: !t.completed } : t
+      ));
+    }
   };
 
   const toggleSection = (category: string) => {
@@ -19,6 +55,10 @@ export const ToDoList: React.FC = () => {
   };
 
   const categories = Array.from(new Set(todos.map(t => t.category)));
+
+  if (loading) {
+    return <div className="text-center py-10">Loading tasks...</div>;
+  }
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">

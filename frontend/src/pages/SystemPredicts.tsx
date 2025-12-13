@@ -1,23 +1,64 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CloudRain, Wind, Edit2, Check, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
-import { MOCK_WEATHER } from '../utils/mockData';
+import api from '../services/api';
 
 export const SystemPredicts: React.FC = () => {
   const navigate = useNavigate();
+  // Retrieve passed state
+  const location = useLocation();
+  const district = location.state?.district;
+  const irrigation = location.state?.irrigation; // Persist this
+
   const [isEditing, setIsEditing] = useState(false);
   const [data, setData] = useState({
-    soilType: 'Red Loamy Soil',
-    nitrogen: 'Medium',
-    phosphorus: 'Low',
-    potassium: 'High',
-    ph: '6.5',
-    ...MOCK_WEATHER
+    soilType: 'Loading...',
+    nitrogen: '--',
+    phosphorus: '--',
+    potassium: '--',
+    ph: '--',
+    temp: '--',
+    humidity: '--',
+    rainfall: '--',
   });
+
+  useEffect(() => {
+    const fetchEnvironmentData = async () => {
+      try {
+        // Fetch Weather
+        const weatherRes = await api.get('/weather', { params: { district } });
+        if (weatherRes.data) {
+          setData(prev => ({
+            ...prev,
+            temp: weatherRes.data.temperature + '°C',
+            humidity: weatherRes.data.humidity + '%',
+            rainfall: (weatherRes.data.rainfall || 0) + ' mm',
+          }));
+        }
+
+        // Fetch Soil (New Endpoint Logic)
+        const soilRes = await api.get('/soil-data', { params: { district } });
+        if (soilRes.data && soilRes.data.soilType) {
+           setData(prev => ({
+            ...prev,
+            soilType: soilRes.data.soilType,
+            ph: soilRes.data.ph,
+            nitrogen: soilRes.data.nitrogen,
+            phosphorus: soilRes.data.phosphorus,
+            potassium: soilRes.data.potassium
+           }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch environment data:', error);
+      }
+    };
+    
+    if (district) fetchEnvironmentData();
+  }, [district]);
 
   const handleSave = () => {
     setIsEditing(false);
@@ -87,7 +128,7 @@ export const SystemPredicts: React.FC = () => {
         </Button>
         <Button
           className="flex-1"
-          onClick={() => navigate('/recommendations')}
+          onClick={() => navigate('/recommendations', { state: { district, irrigation } })}
         >
           Get Recommendations <ArrowRight className="h-4 w-4 ml-2" />
         </Button>

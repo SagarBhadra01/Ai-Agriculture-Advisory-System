@@ -2,7 +2,17 @@ import React, { useState } from 'react';
 import { Upload, X, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { MOCK_DISEASE_RESULT } from '../utils/mockData';
+
+const MOCK_DISEASE_RESULT = {
+  diseaseName: 'Leaf Rust',
+  severity: 'High',
+  description: 'Fungal disease affecting leaves, causing orange-brown pustules.',
+  remedy: [
+    'Apply fungicides like Propiconazole.',
+    'Remove infected leaves.',
+    'Ensure proper spacing for air circulation.'
+  ]
+};
 
 export const DiseaseDetect: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
