@@ -38,6 +38,7 @@ model Crop {
   marketPrices     MarketPrice[]
   suitability      CropSuitability[]
   advisories       CropAdvisory[]
+  districtCrops    DistrictCrop[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 }
@@ -48,6 +49,7 @@ model SoilType {
   description     String?
   characteristics String?
   crops           CropSuitability[]
+  districtCrops   DistrictCrop[]
 }
 
 model Season {
@@ -55,6 +57,7 @@ model Season {
   name   String            @unique // e.g., "Kharif", "Rabi", "Zaid"
   months String? // e.g., "June-October"
   crops  CropSuitability[]
+  districtCrops DistrictCrop[]
 }
 
 // Mapping table for Crop-Soil-Season relationships
@@ -139,4 +142,20 @@ model CropAdvisory {
   message   String?  // The actual advisory content
   userId    Int?
   user      User?    @relation(fields: [userId], references: [id])
+}
+
+model DistrictCrop {
+  id          Int      @id @default(autoincrement())
+  district    String
+  pinCode     String
+  cropId      Int
+  crop        Crop     @relation(fields: [cropId], references: [id])
+  seasonId    Int
+  season      Season   @relation(fields: [seasonId], references: [id])
+  soilTypeId  Int
+  soilType    SoilType @relation(fields: [soilTypeId], references: [id])
+  minTemp     Float
+  maxTemp     Float
+  
+  @@unique([district, cropId, seasonId])
 }

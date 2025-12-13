@@ -3,13 +3,26 @@ import prisma from '../prisma';
 
 export const getWeather = async (req: Request, res: Response) => {
   try {
-    // For now, fetch the latest weather data entry
-    // In a real app, this might fetch from an external API or filter by location
+    const { district } = req.query;
+    
+    let whereClause = {};
+    if (district) {
+      whereClause = { location: String(district) };
+    }
+
     const weather = await prisma.weatherData.findFirst({
+      where: whereClause,
       orderBy: {
         date: 'desc',
       },
     });
+
+    if (!weather && district) {
+       // Fallback if specific district not found (though our seed ensures coverage)
+       const fallback = await prisma.weatherData.findFirst();
+       return res.json(fallback);
+    }
+
     res.json(weather);
   } catch (error) {
     console.error('Error fetching weather:', error);
