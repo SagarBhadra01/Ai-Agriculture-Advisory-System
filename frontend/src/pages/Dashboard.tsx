@@ -18,6 +18,7 @@ export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useUser();
   const [weather, setWeather] = useState<any>(null);
+  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,6 +26,14 @@ export const Dashboard: React.FC = () => {
       try {
         const weatherRes = await api.get('/weather');
         setWeather(weatherRes.data);
+
+        const userEmail = user?.primaryEmailAddress?.emailAddress;
+        if (userEmail) {
+          const statsRes = await api.get('/dashboard/stats', {
+            params: { userEmail }
+          });
+          setStats(statsRes.data);
+        }
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
       } finally {
@@ -33,7 +42,7 @@ export const Dashboard: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user]);;
 
   const features = [
     {
@@ -140,6 +149,36 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* User Stats Section */}
+      {stats && (
+        <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4 animate-slide-up delay-200">
+          <Card padding="md" className="hover:shadow-lg transition-shadow">
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">Total Tasks</p>
+              <p className="text-2xl sm:text-3xl font-bold text-primary-600">{stats.totalTasks}</p>
+            </div>
+          </Card>
+          <Card padding="md" className="hover:shadow-lg transition-shadow">
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">Completed Tasks</p>
+              <p className="text-2xl sm:text-3xl font-bold text-green-600">{stats.completedTasks}</p>
+            </div>
+          </Card>
+          <Card padding="md" className="hover:shadow-lg transition-shadow">
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">Active Advisories</p>
+              <p className="text-2xl sm:text-3xl font-bold text-blue-600">{stats.activeAdvisories}</p>
+            </div>
+          </Card>
+          <Card padding="md" className="hover:shadow-lg transition-shadow">
+            <div className="space-y-2">
+              <p className="text-sm text-gray-600">Total Advisories</p>
+              <p className="text-2xl sm:text-3xl font-bold text-purple-600">{stats.totalAdvisories}</p>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Features Grid */}
       <div className="animate-slide-up delay-300">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useUser } from '@clerk/clerk-react';
 import { ChevronDown, ChevronUp, CheckCircle, Circle, Calendar } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
@@ -6,18 +7,22 @@ import api from '../services/api';
 import type { ToDoItem } from '../types';
 
 export const ToDoList: React.FC = () => {
+  const { user, isLoaded } = useUser();
   const [todos, setTodos] = useState<ToDoItem[]>([]);
   const [openSection, setOpenSection] = useState<string | null>('Preparation');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTodos = async () => {
+      if (!isLoaded) return;
+
       try {
-        const response = await api.get('/todos');
-        // Map backend data to frontend structure if needed
-        // Backend: { id, category, task, dueDate, completed }
-        // Frontend: { id, category, task, dueDate, completed }
-        // Format date for display
+        const userEmail = user?.primaryEmailAddress?.emailAddress || 'demo@agriculture.com';
+        
+        const response = await api.get('/todos', {
+          params: { userEmail }
+        });
+        
         const mappedData = response.data.map((item: any) => ({
           ...item,
           dueDate: new Date(item.dueDate).toLocaleDateString(),
@@ -31,7 +36,7 @@ export const ToDoList: React.FC = () => {
     };
 
     fetchTodos();
-  }, []);
+  }, [isLoaded, user]);
 
   const toggleTodo = async (id: string | number) => {
     try {

@@ -10,12 +10,15 @@ export const MarketPrices: React.FC = () => {
   const [marketPrices, setMarketPrices] = useState<MarketPrice[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
   useEffect(() => {
     const fetchPrices = async () => {
       try {
-        const response = await api.get('/market-prices');
+        const response = await api.get('/market-prices', {
+          params: selectedDistrict ? { district: selectedDistrict } : {}
+        });
         // Backend returns: { id, marketName, price, crop: { name, ... } }
         const mappedData = response.data.map((item: any) => ({
           ...item,
@@ -32,7 +35,7 @@ export const MarketPrices: React.FC = () => {
     };
 
     fetchPrices();
-  }, []);
+  }, [selectedDistrict]);
 
   const handleSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';
@@ -77,7 +80,23 @@ export const MarketPrices: React.FC = () => {
       </div>
 
       <Card padding="none" className="overflow-hidden animate-slide-up">
-        <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
+        <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50 space-y-3">
+          <select
+            value={selectedDistrict}
+            onChange={(e) => setSelectedDistrict(e.target.value)}
+            className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white"
+          >
+            <option value="">All Districts</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Darjeeling">Darjeeling</option>
+            <option value="Purba Bardhaman">Purba Bardhaman</option>
+            <option value="Hooghly">Hooghly</option>
+            <option value="Nadia">Nadia</option>
+            <option value="Malda">Malda</option>
+            <option value="Murshidabad">Murshidabad</option>
+            <option value="South 24 Parganas">South 24 Parganas</option>
+            <option value="North 24 Parganas">North 24 Parganas</option>
+          </select>
           <Input
             placeholder="Search crops or markets..."
             value={searchTerm}
