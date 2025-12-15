@@ -6,6 +6,7 @@ import soilRoutes from './soilRoutes';
 import advisoryRoutes from './advisoryRoutes';
 import taskRoutes from './taskRoutes';
 import weatherRoutes from './weatherRoutes';
+import dashboardRoutes from './dashboardRoutes';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/soil-data', soilRoutes);
 router.use('/advisories', advisoryRoutes);
 router.use('/todos', taskRoutes);
 router.use('/weather', weatherRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 export default router;

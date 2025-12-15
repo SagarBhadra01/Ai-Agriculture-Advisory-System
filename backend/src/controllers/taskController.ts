@@ -3,7 +3,23 @@ import prisma from '../prisma';
 
 export const getTasks = async (req: Request, res: Response) => {
   try {
+    const { userEmail } = req.query;
+    let whereClause: any = {};
+    
+    if (userEmail) {
+      const user = await prisma.user.findUnique({ 
+        where: { email: String(userEmail) } 
+      });
+      if (user) {
+        whereClause.userId = user.id;
+      } else {
+        // New user with no tasks yet
+        return res.json([]);
+      }
+    }
+
     const tasks = await prisma.task.findMany({
+      where: whereClause,
       orderBy: {
         dueDate: 'asc',
       },

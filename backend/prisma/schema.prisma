@@ -18,12 +18,6 @@ model User {
   advisories CropAdvisory[]
 }
 
-model Advisory {
-  id        Int      @id @default(autoincrement())
-  query     String
-  response  String
-  createdAt DateTime @default(now())
-}
 
 // --- Agricultural Database Models ---
 
